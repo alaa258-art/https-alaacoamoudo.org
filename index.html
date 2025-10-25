@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البحث عن كلمة المرور</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-search:active {
+            transform: translateY(0);
+        }
+
+        .btn-clear {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .student-id-display {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-right: 4px solid #667eea;
+            padding-right: 15px;
+        }
+
+        .student-id-display strong {
+            color: #333;
+        }
+
+        .password-display {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-right: 4px solid #28a745;
+            padding-right: 15px;
+            margin-bottom: 15px;
+        }
+
+        .password-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .password-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            word-break: break-all;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+            border-right: 4px solid #f5c6cb;
+            padding-right: 15px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-right: 4px solid #c3e6cb;
+            padding-right: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .print-button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .print-button:hover {
+            background: #0056b3;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            .button-group,
+            .print-button,
+            .form-group {
+                display: none;
+            }
+            .result-section {
+                background: white;
+                border: 1px solid #ddd;
+            }
+        }
+
+        .info-text {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 كلمة المرور</h1>
+        <p class="subtitle">ابحث عن كلمة مرورك باستخدام رقم الطالب</p>
+
+        <div class="form-group">
+            <label for="studentId">رقم الطالب:</label>
+            <input 
+                type="text" 
+                id="studentId" 
+                placeholder="أدخل رقم الطالب..."
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="button-group">
+            <button class="btn-search" onclick="searchPassword()">🔍 بحث</button>
+            <button class="btn-clear" onclick="clearForm()">مسح</button>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="result-section" id="resultSection">
+            <div class="success-message show">✓ تم العثور على البيانات بنجاح</div>
+            
+            <div class="result-label">رقم الطالب:</div>
+            <div class="student-id-display">
+                <strong id="displayStudentId"></strong>
+            </div>
+
+            <div class="result-label">كلمة المرور:</div>
+            <div class="password-display">
+                <div class="password-label">كلمتك السرية:</div>
+                <div class="password-value" id="displayPassword"></div>
+            </div>
+
+            <button class="print-button" onclick="printPassword()">🖨️ طباعة</button>
+        </div>
+
+        <p class="info-text">تأكد من حفظ كلمة المرور في مكان آمن</p>
+    </div>
+
+    <script>
+        // Load student data
+        let studentsData = {};
+
+        // Fetch the JSON data
+        fetch('students_data.json')
+            .then(response => response.json())
+            .then(data => {
+                studentsData = data;
+                console.log('✓ تم تحميل بيانات الطلاب بنجاح');
+            })
+            .catch(error => {
+                console.error('خطأ في تحميل البيانات:', error);
+                document.getElementById('errorMessage').textContent = 'خطأ في تحميل البيانات. يرجى تحديث الصفحة.';
+                document.getElementById('errorMessage').classList.add('show');
+            });
+
+        function searchPassword() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const resultSection = document.getElementById('resultSection');
+
+            // Clear previous messages
+            errorMessage.classList.remove('show');
+            errorMessage.textContent = '';
+
+            // Validate input
+            if (!studentId) {
+                errorMessage.textContent = '⚠️ يرجى إدخال رقم الطالب';
+                errorMessage.classList.add('show');
+                return;
+            }
+
+            // Search for the student
+            if (studentsData[studentId]) {
+                const password = studentsData[studentId];
+                document.getElementById('displayStudentId').textContent = studentId;
+                document.getElementById('displayPassword').textContent = password;
+                resultSection.classList.add('show');
+            } else {
+                errorMessage.textContent = '❌ لم يتم العثور على رقم الطالب. تأكد من إدخال الرقم بشكل صحيح.';
+                errorMessage.classList.add('show');
+                resultSection.classList.remove('show');
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('studentId').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('studentId').focus();
+        }
+
+        function printPassword() {
+            window.print();
+        }
+
+        // Allow search with Enter key
+        document.getElementById('studentId').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchPassword();
+            }
+        });
+
+        // Focus on input when page loads
+        document.getElementById('studentId').focus();
+    </script>
+</body>
+</html>
+
